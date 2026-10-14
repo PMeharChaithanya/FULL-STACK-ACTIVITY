@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Q2 - Grade Calculator</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    input { padding: 6px; width: 150px; }
+    button { padding: 6px 12px; cursor: pointer; }
+    #grade { font-weight: bold; font-size: 18px; }
+    .error { color: red; }
+    table { border-collapse: collapse; margin-top: 15px; }
+    th, td { border: 1px solid #aaa; padding: 5px 12px; }
+    th { background: #eee; }
+  </style>
+</head>
+<body>
+  <h2>Q2) Grade Calculator</h2>
+  <p>Reg No: RA2311003011556</p>
+
+  <input type="text" id="marks" placeholder="Enter marks (0-100)">
+  <button id="gradeBtn">Calculate Grade</button>
+
+  <p>Grade: <span id="grade">-</span></p>
+
+  <table>
+    <tr><th>Marks</th><th>Grade</th></tr>
+    <tr><td>91 - 100</td><td>O</td></tr>
+    <tr><td>81 - 90</td><td>A+</td></tr>
+    <tr><td>71 - 80</td><td>A</td></tr>
+    <tr><td>61 - 70</td><td>B</td></tr>
+    <tr><td>51 - 60</td><td>C</td></tr>
+    <tr><td>50 and below</td><td>F</td></tr>
+  </table>
+
+  <script>
+    function getGrade(marks) {
+      if (marks > 90) {
+        return "O";
+      } else if (marks > 80) {
+        return "A+";
+      } else if (marks > 70) {
+        return "A";
+      } else if (marks > 60) {
+        return "B";
+      } else if (marks > 50) {
+        return "C";
+      } else {
+        return "F";
+      }
+    }
+
+    function calculateGrade() {
+      const input = document.getElementById("marks").value.trim();
+      const label = document.getElementById("grade");
+      const marks = Number(input);
+
+      if (input === "" || isNaN(marks) || marks < 0 || marks > 100) {
+        label.textContent = "Please enter valid marks between 0 and 100";
+        label.className = "error";
+        return;
+      }
+
+      label.textContent = getGrade(marks) + " (Marks: " + marks + ")";
+      label.className = "";
+    }
+
+    document.getElementById("gradeBtn").addEventListener("click", calculateGrade);
+
+    // Pressing Enter in the text box also calculates the grade
+    document.getElementById("marks").addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        calculateGrade();
+      }
+    });
+  </script>
+</body>
+</html>

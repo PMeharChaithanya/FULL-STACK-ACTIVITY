@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Q3 - Expense Tracker</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    input { padding: 6px; }
+    button { padding: 6px 12px; cursor: pointer; }
+    table { border-collapse: collapse; margin-top: 15px; width: 400px; }
+    th, td { border: 1px solid #aaa; padding: 6px 10px; text-align: left; }
+    th { background: #eee; }
+    tfoot td { font-weight: bold; background: #f7f7f7; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+  <h2>Q3) Expense Tracker</h2>
+  <p>Reg No: RA2311003011556</p>
+
+  <input type="text" id="item" placeholder="Item">
+  <input type="text" id="amount" placeholder="Expense (Rs.)">
+  <button id="addBtn">Add Expense</button>
+  <p id="message" class="error"></p>
+
+  <table>
+    <thead>
+      <tr><th>S.No</th><th>Item</th><th>Expense (Rs.)</th></tr>
+    </thead>
+    <tbody id="expenseBody"></tbody>
+    <tfoot>
+      <tr><td colspan="2">Total Expense</td><td id="total">0.00</td></tr>
+    </tfoot>
+  </table>
+
+  <script>
+    let total = 0;
+    let count = 0;
+
+    function addExpense() {
+      const itemBox = document.getElementById("item");
+      const amountBox = document.getElementById("amount");
+      const message = document.getElementById("message");
+
+      const item = itemBox.value.trim();
+      const amount = Number(amountBox.value);
+
+      if (item === "") {
+        message.textContent = "Please enter the item name.";
+        return;
+      }
+      if (amountBox.value.trim() === "" || isNaN(amount) || amount <= 0) {
+        message.textContent = "Please enter a valid expense amount greater than 0.";
+        return;
+      }
+      message.textContent = "";
+
+      addRow(item, amount);
+      updateTotal(amount);
+
+      itemBox.value = "";
+      amountBox.value = "";
+      itemBox.focus();
+    }
+
+    function addRow(item, amount) {
+      count++;
+      const row = document.createElement("tr");
+
+      const noCell = document.createElement("td");
+      noCell.textContent = count;
+      const itemCell = document.createElement("td");
+      itemCell.textContent = item;
+      const amountCell = document.createElement("td");
+      amountCell.textContent = amount.toFixed(2);
+
+      row.appendChild(noCell);
+      row.appendChild(itemCell);
+      row.appendChild(amountCell);
+      document.getElementById("expenseBody").appendChild(row);
+    }
+
+    function updateTotal(amount) {
+      total += amount;
+      document.getElementById("total").textContent = total.toFixed(2);
+    }
+
+    document.getElementById("addBtn").addEventListener("click", addExpense);
+
+    // Pressing Enter in the expense box also adds the expense
+    document.getElementById("amount").addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        addExpense();
+      }
+    });
+  </script>
+</body>
+</html>

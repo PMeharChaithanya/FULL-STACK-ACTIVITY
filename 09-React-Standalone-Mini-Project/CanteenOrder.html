@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>College Canteen Order - RA2311003011556</title>
+</head>
+<body>
+  <div id="root"></div>
+</body>
+<!-- This setup is not suitable for production. -->
+<!-- Only use it in development! -->
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script async src="https://ga.jspm.io/npm:es-module-shims@1.7.0/dist/es-module-shims.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react?dev",
+    "react-dom/client": "https://esm.sh/react-dom/client?dev"
+  }
+}
+</script>
+<script type="text/babel" data-type="module">
+import React, { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+
+import { useState, useEffect } from 'react';
+
+// Real-world problem: students wait in a long queue at the canteen.
+// This app lets a student pick items, see the bill and place the order before going to the counter.
+
+const MENU = [
+  { id: 1, name: 'Masala Dosa', price: 50, type: 'Veg', available: true },
+  { id: 2, name: 'Idli (2 pcs)', price: 30, type: 'Veg', available: true },
+  { id: 3, name: 'Veg Fried Rice', price: 70, type: 'Veg', available: true },
+  { id: 4, name: 'Chicken Biryani', price: 120, type: 'Non-Veg', available: true },
+  { id: 5, name: 'Egg Puff', price: 25, type: 'Non-Veg', available: false },
+  { id: 6, name: 'Tea', price: 15, type: 'Veg', available: true },
+  { id: 7, name: 'Cold Coffee', price: 40, type: 'Veg', available: true },
+];
+
+function Header({ regNo }) {
+  return (
+    <div className="header">
+      <h1>College Canteen - Food Order</h1>
+      <p>Reg No: {regNo}</p>
+    </div>
+  );
+}
+
+function FilterButtons({ filter, onChange }) {
+  const options = ['All', 'Veg', 'Non-Veg'];
+  return (
+    <div className="filters">
+      {options.map(option => (
+        <button
+          key={option}
+          className={filter === option ? 'selected' : ''}
+          onClick={() => onChange(option)}
+        >
+          {option}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function MenuItem({ item, onAdd }) {
+  return (
+    <tr>
+      <td>{item.name}</td>
+      <td>{item.type}</td>
+      <td>Rs. {item.price}</td>
+      <td>
+        {item.available ? (
+          <button onClick={() => onAdd(item)}>Add</button>
+        ) : (
+          <span className="sold-out">Sold out</span>
+        )}
+      </td>
+    </tr>
+  );
+}
+
+function Menu({ items, onAdd }) {
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Type</th>
+          <th>Price</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {items.map(item => (
+          <MenuItem key={item.id} item={item} onAdd={onAdd} />
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+function Cart({ cart, onIncrease, onDecrease, onPlaceOrder }) {
+  if (cart.length === 0) {
+    return <p>Your cart is empty. Add some items from the menu.</p>;
+  }
+
+  const total = cart.reduce((sum, c) => sum + c.price * c.qty, 0);
+
+  return (
+    <div>
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Qty</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {cart.map(c => (
+            <tr key={c.id}>
+              <td>{c.name}</td>
+              <td>
+                <button onClick={() => onDecrease(c.id)}>-</button>
+                {' '}{c.qty}{' '}
+                <button onClick={() => onIncrease(c.id)}>+</button>
+              </td>
+              <td>Rs. {c.price * c.qty}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p className="total">Total: Rs. {total}</p>
+      <button className="order-btn" onClick={onPlaceOrder}>Place Order</button>
+    </div>
+  );
+}
+
+function OrderStatus({ order, onNewOrder }) {
+  const [secondsLeft, setSecondsLeft] = useState(order.waitTime);
+
+  // useEffect: count down the waiting time every second
+  useEffect(() => {
+    if (secondsLeft === 0) return;
+    const timer = setTimeout(() => setSecondsLeft(secondsLeft - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [secondsLeft]);
+
+  return (
+    <div className="status">
+      <h2>Order #{order.number} placed!</h2>
+      <p>Total paid: Rs. {order.total}</p>
+      {secondsLeft > 0 ? (
+        <p>Your food will be ready in <b>{secondsLeft}</b> seconds...</p>
+      ) : (
+        <p className="ready">Your order is ready. Please collect it at the counter.</p>
+      )}
+      <button onClick={onNewOrder}>New Order</button>
+    </div>
+  );
+}
+
+let App = function MyApp() {
+  const [filter, setFilter] = useState('All');
+  const [cart, setCart] = useState([]);
+  const [order, setOrder] = useState(null);
+  const [orderCount, setOrderCount] = useState(100);
+
+  // useEffect: show number of items in the browser tab title
+  useEffect(() => {
+    const items = cart.reduce((sum, c) => sum + c.qty, 0);
+    document.title = items > 0 ? `(${items}) Canteen Order` : 'Canteen Order';
+  }, [cart]);
+
+  function addToCart(item) {
+    const existing = cart.find(c => c.id === item.id);
+    if (existing) {
+      increase(item.id);
+    } else {
+      setCart([...cart, { ...item, qty: 1 }]);
+    }
+  }
+
+  function increase(id) {
+    setCart(cart.map(c => (c.id === id ? { ...c, qty: c.qty + 1 } : c)));
+  }
+
+  function decrease(id) {
+    setCart(
+      cart
+        .map(c => (c.id === id ? { ...c, qty: c.qty - 1 } : c))
+        .filter(c => c.qty > 0)
+    );
+  }
+
+  function placeOrder() {
+    const total = cart.reduce((sum, c) => sum + c.price * c.qty, 0);
+    const items = cart.reduce((sum, c) => sum + c.qty, 0);
+    setOrder({ number: orderCount + 1, total: total, waitTime: items * 5 });
+    setOrderCount(orderCount + 1);
+    setCart([]);
+  }
+
+  const visibleItems = filter === 'All' ? MENU : MENU.filter(item => item.type === filter);
+
+  return (
+    <div className="container">
+      <Header regNo="RA2311003011556" />
+
+      {order ? (
+        <OrderStatus order={order} onNewOrder={() => setOrder(null)} />
+      ) : (
+        <div className="row">
+          <div className="col">
+            <h2>Menu</h2>
+            <FilterButtons filter={filter} onChange={setFilter} />
+            <Menu items={visibleItems} onAdd={addToCart} />
+          </div>
+          <div className="col">
+            <h2>Cart</h2>
+            <Cart cart={cart} onIncrease={increase} onDecrease={decrease} onPlaceOrder={placeOrder} />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+const root = createRoot(document.getElementById('root'));
+root.render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);
+</script>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  margin: 20px;
+  padding: 0;
+}
+
+h1 {
+  margin-top: 0;
+  font-size: 22px;
+}
+
+h2 {
+  font-size: 18px;
+}
+
+.container {
+  max-width: 850px;
+}
+
+.header {
+  border-bottom: 1px solid #999;
+  margin-bottom: 10px;
+}
+
+.header p {
+  margin-top: 0;
+}
+
+.row {
+  display: flex;
+  gap: 30px;
+}
+
+.col {
+  flex: 1;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 6px;
+  text-align: left;
+}
+
+th {
+  background: #eee;
+}
+
+button {
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.filters {
+  margin-bottom: 10px;
+}
+
+.filters button {
+  margin-right: 5px;
+}
+
+.selected {
+  background: #333;
+  color: white;
+}
+
+.sold-out {
+  color: gray;
+}
+
+.total {
+  font-weight: bold;
+}
+
+.order-btn {
+  padding: 6px 14px;
+}
+
+.status {
+  border: 1px solid #ccc;
+  padding: 15px;
+}
+
+.ready {
+  color: green;
+  font-weight: bold;
+}
+</style>
+</html>

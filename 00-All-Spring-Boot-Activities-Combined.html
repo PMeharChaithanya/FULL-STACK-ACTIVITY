@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Spring Boot Activities - RA2311003011556</title>
+<style>
+  body { font-family: -apple-system, Helvetica, Arial, sans-serif; margin: 16px; background: #f4f6f8; color: #222; }
+  header { background: #1f4e79; color: #fff; padding: 12px 18px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+  header h1 { margin: 0; font-size: 20px; }
+  header .reg { font-size: 18px; font-weight: bold; background: #fff; color: #1f4e79; padding: 4px 12px; border-radius: 6px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 12px; }
+  .card { background: #fff; border-radius: 8px; padding: 10px 12px; box-shadow: 0 1px 3px rgba(0,0,0,.15); }
+  .card h2 { margin: 0 0 2px; font-size: 15px; color: #1f4e79; }
+  .date { font-size: 11px; color: #888; font-weight: normal; }
+  .task { font-size: 12px; color: #555; margin-bottom: 6px; }
+  .url { font-size: 11px; font-family: Menlo, monospace; color: #0a58ca; margin: 6px 0 2px; }
+  iframe { width: 100%; height: 70px; border: 1px solid #ccc; border-radius: 4px; background: #fff; }
+  iframe.tall { height: 120px; }
+  pre.tests { font-size: 10.5px; background: #0d1117; color: #3fb950; padding: 6px 8px; border-radius: 4px; margin: 6px 0 0; white-space: pre-wrap; }
+  .ok { color: #1a7f37; font-weight: bold; font-size: 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Spring Boot Activities – Run Outputs</h1>
+  <span class="reg">Reg No: RA2311003011556</span>
+</header>
+
+<div class="grid">
+
+  <div class="card">
+    <h2>1. Activity: Design and Develop a Basic Spring Boot App (Library Management) <span class="date">(Oct 9)</span></h2>
+    <div class="task">Design &amp; build own app (3-layer, 3 entities, business rules, JUnit test).</div>
+    <div class="url">http://localhost:8081/api/hello</div>
+    <iframe src="http://localhost:8081/api/hello"></iframe>
+    <div class="url">http://localhost:8081/api/books</div>
+    <iframe src="http://localhost:8081/api/books"></iframe>
+    <pre class="tests">$ mvn test
+Tests run: 4, Failures: 0 -- LibraryServiceTest
+BUILD SUCCESS</pre>
+  </div>
+
+  <div class="card">
+    <h2>2. Spring Boot Three Tier Architecture <span class="date">(Oct 7)</span></h2>
+    <div class="task">Run the Controller → Service → Repository → H2 demo and show the output.</div>
+    <div class="url">http://localhost:8082/</div>
+    <iframe src="http://localhost:8082/"></iframe>
+    <div class="url">http://localhost:8082/api/products</div>
+    <iframe src="http://localhost:8082/api/products"></iframe>
+  </div>
+
+  <div class="card">
+    <h2>3. Demo Rest Service in Spring Boot <span class="date">(Oct 7)</span></h2>
+    <div class="task">Run the REST service project and show the browser output.</div>
+    <div class="url">http://localhost:8083/</div>
+    <iframe src="http://localhost:8083/"></iframe>
+    <div class="url">http://localhost:8083/students</div>
+    <iframe src="http://localhost:8083/students"></iframe>
+  </div>
+
+  <div class="card">
+    <h2>4. Spring Boot Test <span class="date">(Oct 7)</span></h2>
+    <div class="task">Run the testing project and show the output.</div>
+    <div class="url">http://localhost:8084/</div>
+    <iframe src="http://localhost:8084/"></iframe>
+    <div class="url">http://localhost:8084/products</div>
+    <iframe src="http://localhost:8084/products"></iframe>
+    <pre class="tests">$ mvn test
+Tests run: 1, Failures: 0 -- ProductRepositorySliceTest
+Tests run: 1, Failures: 0 -- ProductIntegrationTest
+Tests run: 1, Failures: 0 -- ProductControllerSliceTest
+Tests run: 1, Failures: 0 -- ProductServiceUnitTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
+BUILD SUCCESS</pre>
+  </div>
+
+  <div class="card">
+    <h2>5. Test Driven Spring Boot App <span class="date">(Oct 1)</span></h2>
+    <div class="task">Run the TDD app with Maven (tests + application).</div>
+    <div class="url">http://localhost:8080/</div>
+    <iframe src="http://localhost:8080/"></iframe>
+    <div class="url">http://localhost:8080/products/1</div>
+    <iframe src="http://localhost:8080/products/1"></iframe>
+    <pre class="tests">$ mvn test
+Tests run: 1, Failures: 0 -- ProductControllerTest
+Tests run: 2, Failures: 0 -- ProductServiceTest
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+BUILD SUCCESS</pre>
+  </div>
+
+  <div class="card">
+    <h2>6. Spring Boot First Application <span class="date">(Sep 29)</span></h2>
+    <div class="task">Run the given Spring Boot (Thymeleaf) app and show the pages.</div>
+    <div class="url">http://localhost:8085/</div>
+    <iframe class="tall" src="http://localhost:8085/"></iframe>
+    <div class="url">http://localhost:8085/about</div>
+    <iframe class="tall" src="http://localhost:8085/about"></iframe>
+  </div>
+
+</div>
+</body>
+</html>

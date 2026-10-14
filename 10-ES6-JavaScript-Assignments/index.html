@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ES6 Assignments - RA2311003011556</title>
+    <style>
+      body { font-family: sans-serif; margin: 20px; }
+      #output { background: #f4f4f4; border: 1px solid #ccc; padding: 10px; font-family: monospace; white-space: pre-wrap; }
+    </style>
+  </head>
+  <body>
+    <h1>ES6 Assignments 1 - 4</h1>
+    <p>Reg No: RA2311003011556</p>
+    <p>Output is shown below and also in the browser console (Inspect &rarr; Console).</p>
+    <div id="output"></div>
+
+    <script>
+      // Also show console.log output on the page
+      const originalLog = console.log;
+      console.log = (...args) => {
+        originalLog(...args);
+        const line = args.map(a => (typeof a === "object" ? JSON.stringify(a) : a)).join(" ");
+        document.getElementById("output").textContent += line + "\n";
+      };
+    </script>
+    <script src="assignment1.js"></script>
+    <script src="assignment2.js"></script>
+    <script src="assignment3.js"></script>
+    <script src="assignment4.js"></script>
+  </body>
+</html>
